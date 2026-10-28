@@ -42,7 +42,6 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
-## 🖥️ Sample Output
 
 ## Sample CLI Output
 
@@ -198,3 +197,57 @@ Describe your app in numbered steps so a reader can follow along without watchin
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
 
+## Running PawPal+
+
+### Requirements
+
+- Python 3.14 or a compatible Python 3 version
+- Streamlit
+- pytest
+
+### Installation
+
+1. Clone the repository.
+2. Open the project folder in VS Code.
+3. Create and activate a Python virtual environment.
+4. Install the project dependencies:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+### Launching the Application
+
+Start the Streamlit interface:
+
+```bash
+python3 -m streamlit run app.py
+```
+
+Streamlit will display a local URL where the application can be accessed through a web browser.
+
+### Using PawPal+
+
+1. **Register a pet:** Enter the pet's name, species, and age.
+2. **Create a task:** Select a pet and provide the activity, date, time, duration, priority, and recurrence frequency.
+3. **Generate a schedule:** View tasks organized chronologically.
+4. **Filter activities:** Filter the schedule by date, pet, or completion status.
+5. **Identify conflicts:** Review warnings when pending activities overlap.
+6. **Complete tasks:** Mark activities as completed directly from the interface.
+
+### Recurring Tasks
+
+PawPal+ supports three recurrence options:
+
+- **Once:** The task occurs only on its scheduled date.
+- **Daily:** Completing the task generates another occurrence for the following day.
+- **Weekly:** Completing the task generates another occurrence seven days later.
+
+Recurring tasks use completion-triggered scheduling. Future occurrences are created when the previous occurrence is marked complete.
+
+### Current Limitations
+
+- Recurring tasks must be completed before their next occurrence is generated.
+- Scheduling conflicts are identified but are not automatically resolved.
+- Pet and task information is stored in Streamlit session state and is not permanently saved between sessions.
+- Automated testing currently focuses on backend functionality rather than the Streamlit interface.

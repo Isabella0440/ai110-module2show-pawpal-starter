@@ -94,12 +94,18 @@ Overall, this exercise strengthened my understanding of automated testing and wh
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+The part of this project I am most satisfied with is how the different components of PawPal+ came together to create a functional application. I started by designing the classes and their relationships, then gradually implemented the scheduling algorithms and connected them to the Streamlit interface. I particularly liked seeing the conflict detection and task completion features work in the actual application because they demonstrated how the backend logic could be used to solve practical problems.
+
+I am also satisfied with the testing process. I created 12 automated tests covering the main functionality and several edge cases, and all of them passed. Building the application in phases made it easier to identify problems, verify individual features, and make improvements without having to redesign the entire system.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+If I had another iteration, I would improve how recurring tasks are generated. Currently, PawPal+ creates the next occurrence of a daily or weekly task only after the previous occurrence is completed. Although this works, it limits how far ahead users can view their schedules. I would redesign this functionality so recurring tasks are generated automatically based on their frequency, regardless of whether earlier activities have been completed.
+
+I would also add persistent data storage so pets and tasks remain available after the application is closed. Another improvement would be allowing users to edit or delete existing tasks directly from the Streamlit interface. These changes would make PawPal+ more practical for everyday use.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+One important thing I learned from this project is how much easier software development becomes when a system is divided into smaller components with clearly defined responsibilities. Designing the UML diagram before implementing the application helped me understand how the Owner, Pet, Task, and Scheduler classes should interact. It also made it easier to reuse existing methods when connecting the scheduling logic to Streamlit.
+
+I also learned that AI can be a useful development partner, but its suggestions still need to be reviewed and tested. Throughout the project, I used AI to help organize the implementation, understand the code, and troubleshoot issues. However, I still needed to run the application, verify the results, and identify limitations that were not immediately obvious. This reinforced the importance of treating AI-generated code as something that needs to be evaluated rather than automatically assuming it is correct.

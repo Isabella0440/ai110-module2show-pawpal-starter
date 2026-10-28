@@ -156,51 +156,190 @@ else:
 st.divider()
 
 # -------------------------------
-# DAILY SCHEDULE
+# SCHEDULE VIEWER
 # -------------------------------
 
-st.subheader("📅 Today's Schedule")
+st.subheader("📅 Pet Care Schedule")
 
 scheduler = st.session_state.scheduler
 
-if st.button("Generate Schedule"):
+# Keep the schedule visible after interacting with buttons
+if "show_schedule" not in st.session_state:
+    st.session_state.show_schedule = False
 
-    schedule = [
-        task
-        for task in scheduler.get_schedule()
-        if task.due_date == date.today()
-    ]
+# -------------------------------
+# FILTER CONTROLS
+# -------------------------------
+
+st.markdown("### 🔎 Filter Your Schedule")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    date_filter = st.selectbox(
+        "Date",
+        ["Today", "Tomorrow", "All Dates"]
+    )
+
+with col2:
+    status_filter = st.selectbox(
+        "Status",
+        ["All", "Pending", "Completed"]
+    )
+
+pet_options = ["All Pets"] + [
+    pet.name for pet in st.session_state.owner.pets
+]
+
+selected_pet = st.selectbox(
+    "Pet",
+    pet_options
+)
+
+if st.button("Generate Schedule"):
+    st.session_state.show_schedule = True
+
+# -------------------------------
+# GENERATE FILTERED SCHEDULE
+# -------------------------------
+
+if st.session_state.show_schedule:
+
+    # Convert selected filters into scheduler arguments
+    pet_name = (
+        None
+        if selected_pet == "All Pets"
+        else selected_pet
+    )
+
+    completed = None
+
+    if status_filter == "Pending":
+        completed = False
+    elif status_filter == "Completed":
+        completed = True
+
+    # Retrieve filtered tasks
+    schedule = scheduler.filter_tasks(
+        pet_name=pet_name,
+        completed=completed
+    )
+
+    # Apply date filtering
+    from datetime import timedelta
+
+    if date_filter == "Today":
+        schedule = [
+            task for task in schedule
+            if task.due_date == date.today()
+        ]
+
+    elif date_filter == "Tomorrow":
+        tomorrow = date.today() + timedelta(days=1)
+
+        schedule = [
+            task for task in schedule
+            if task.due_date == tomorrow
+        ]
+
+    # -------------------------------
+    # DISPLAY SCHEDULE
+    # -------------------------------
 
     if schedule:
 
         schedule_data = []
 
-        for pet in st.session_state.owner.pets:
+        for task in schedule:
 
-            for task in pet.tasks:
+            # Identify the pet associated with the task
+            pet_name = "Unknown"
 
-                if task.due_date == date.today():
+            for pet in st.session_state.owner.pets:
+                if any(existing_task is task for existing_task in pet.tasks):
+                    pet_name = pet.name
+                    break
 
-                    schedule_data.append({
-                        "Pet": pet.name,
-                        "Activity": task.description,
-                        "Time": task.time,
-                        "Duration": f"{task.duration} min",
-                        "Priority": task.priority,
-                        "Frequency": task.frequency,
-                        "Status": (
-                            "Completed"
-                            if task.completed
-                            else "Pending"
-                        )
-                    })
+            schedule_data.append({
+                "Pet": pet_name,
+                "Activity": task.description,
+                "Date": str(task.due_date),
+                "Time": task.time,
+                "Duration": f"{task.duration} min",
+                "Priority": task.priority,
+                "Frequency": task.frequency,
+                "Status": (
+                    "Completed"
+                    if task.completed
+                    else "Pending"
+                )
+            })
 
         st.table(schedule_data)
 
         st.success(
             f"Schedule generated successfully! "
-            f"{len(schedule)} tasks scheduled for today."
+            f"{len(schedule)} task(s) found."
         )
 
+        # -------------------------------
+        # TASK COMPLETION
+        # -------------------------------
+
+        st.markdown("### ✅ Complete Tasks")
+
+        for task in schedule:
+
+            if not task.completed:
+
+                col1, col2 = st.columns([3, 1])
+
+                with col1:
+                    st.write(
+                        f"{task.description} — "
+                        f"{task.due_date} at {task.time}"
+                    )
+
+                with col2:
+                    if st.button(
+                        "Mark Complete",
+                        key=f"complete_{id(task)}"
+                    ):
+                        scheduler.mark_task_complete(task)
+                        st.rerun()
+
+        # -------------------------------
+        # CONFLICT DETECTION
+        # -------------------------------
+
+        conflicts = scheduler.detect_conflicts()
+
+        # Match conflict warnings to the selected date
+        if date_filter == "Today":
+            conflicts = [
+                conflict for conflict in conflicts
+                if str(date.today()) in conflict
+            ]
+
+        elif date_filter == "Tomorrow":
+            tomorrow = date.today() + timedelta(days=1)
+
+            conflicts = [
+                conflict for conflict in conflicts
+                if str(tomorrow) in conflict
+            ]
+
+        if conflicts:
+
+            st.warning(
+                f"⚠️ {len(conflicts)} scheduling conflict(s) detected!"
+            )
+
+            for conflict in conflicts:
+                st.error(conflict)
+
+        else:
+            st.success("✅ No scheduling conflicts detected.")
+
     else:
-        st.info("No tasks scheduled for today.")
+        st.info("No tasks match the selected filters.")
