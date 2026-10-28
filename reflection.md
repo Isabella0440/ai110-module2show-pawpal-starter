@@ -42,13 +42,17 @@ The three core actions I identified for PawPal+ are:
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+My scheduler primarily considers the due date, scheduled time, duration, completion status, and recurrence frequency of each task. I implemented chronological sorting so activities are organized by their scheduled dates and times. The scheduler also uses task duration to identify overlapping activities and allows tasks to be filtered by pet or completion status.
+
+I decided that time was the most important constraint because pet care activities often need to happen at specific times. For example, feeding and medication may need to follow a consistent schedule. Although the system stores priority levels for each task, I chose to organize activities chronologically rather than automatically rearranging them based on priority. This keeps the schedule predictable while still allowing users to identify which activities are more important.
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+One tradeoff I made was implementing conflict detection without automatic conflict resolution. My scheduler can identify when two activities overlap, but it does not automatically change their scheduled times.
+
+I think this is reasonable because pet owners may have specific preferences or responsibilities that the application cannot fully understand. For example, a medication task might need to happen at a particular time, while a walk could be more flexible. Automatically rescheduling activities could create problems if the system moves something that should remain fixed.
+
+By identifying conflicts and leaving the final decision to the user, the scheduler provides useful information without making potentially inappropriate scheduling decisions. This also keeps the implementation simpler and easier to test.
 
 ---
 

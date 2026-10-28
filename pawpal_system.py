@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from typing import Optional
 @dataclass
 class Task:
@@ -75,21 +75,112 @@ class Scheduler:
         return self.owner.get_all_tasks()
 
     def sort_by_time(self, tasks: list[Task]) -> list[Task]:
-        """Sort tasks by their scheduled time."""
-        pass
+        """Sort tasks chronologically by due date and scheduled time."""
+        return sorted(
+            tasks,
+            key=lambda task: (task.due_date, task.time)
+        )
 
     def filter_tasks(
         self,
         pet_name: Optional[str] = None,
         completed: Optional[bool] = None
     ) -> list[Task]:
-        """Filter tasks by pet name or completion status."""
-        pass
+        """Filter scheduled tasks by pet name and completion status."""
+
+        filtered_tasks = []
+
+        for pet in self.owner.pets:
+
+            # Skip pets that do not match the requested name
+            if pet_name is not None:
+                if pet.name.lower() != pet_name.lower():
+                    continue
+
+            for task in pet.get_tasks():
+
+                # Skip tasks that do not match the completion filter
+                if completed is not None:
+                    if task.completed != completed:
+                        continue
+
+                filtered_tasks.append(task)
+
+        return self.sort_by_time(filtered_tasks)
 
     def detect_conflicts(self) -> list[str]:
-        """Identify tasks scheduled at conflicting times."""
-        pass
+        """Identify overlapping tasks scheduled on the same day."""
+
+        conflicts = []
+
+        # Only check tasks that have not been completed
+        tasks = self.filter_tasks(completed=False)
+
+        for i in range(len(tasks)):
+            task1 = tasks[i]
+
+            start1 = datetime.combine(
+                task1.due_date,
+                datetime.strptime(task1.time, "%H:%M").time()
+            )
+
+            end1 = start1 + timedelta(minutes=task1.duration)
+
+            for j in range(i + 1, len(tasks)):
+                task2 = tasks[j]
+
+                start2 = datetime.combine(
+                    task2.due_date,
+                    datetime.strptime(task2.time, "%H:%M").time()
+                )
+
+                end2 = start2 + timedelta(minutes=task2.duration)
+
+                # Check whether the time intervals overlap
+                if start1 < end2 and start2 < end1:
+
+                    conflict_message = (
+                        f"Conflict: '{task1.description}' "
+                        f"({task1.time}) overlaps with "
+                        f"'{task2.description}' ({task2.time}) "
+                        f"on {task1.due_date}."
+                    )
+
+                    conflicts.append(conflict_message)
+
+        return conflicts
 
     def mark_task_complete(self, task: Task):
-        """Complete a task and handle recurring activities."""
-        pass
+        """Complete a task and schedule its next occurrence if recurring."""
+
+        # Find the pet that owns this task
+        for pet in self.owner.pets:
+            for existing_task in pet.tasks:
+
+                if existing_task is task:
+
+                    # Prevent completing the same task twice
+                    if task.completed:
+                        return
+
+                    # Mark the current task as completed
+                    task.mark_complete()
+
+                    # Calculate the next occurrence
+                    next_date = task.next_occurrence()
+
+                    # Create a new task if the activity repeats
+                    if next_date is not None:
+
+                        new_task = Task(
+                            description=task.description,
+                            time=task.time,
+                            due_date=next_date,
+                            duration=task.duration,
+                            priority=task.priority,
+                            frequency=task.frequency
+                        )
+
+                        pet.add_task(new_task)
+
+                    return

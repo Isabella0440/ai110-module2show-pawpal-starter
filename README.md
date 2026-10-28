@@ -122,14 +122,34 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
+PawPal+ uses scheduling algorithms to organize pet care activities, manage
+recurring tasks, and identify scheduling conflicts.
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.sort_by_time()` | Sorts tasks chronologically by due date and scheduled time using Python's `sorted()` function. |
+| Filtering | `Scheduler.filter_tasks()` | Filters tasks by pet name, completion status, or both. Results are returned in chronological order. |
+| Conflict handling | `Scheduler.detect_conflicts()` | Detects overlapping tasks by comparing their start and end times. Reports conflicts without automatically rescheduling activities. |
+| Recurring tasks | `Task.next_occurrence()`, `Scheduler.mark_task_complete()` | Automatically creates the next occurrence when a daily or weekly task is completed through the Scheduler. One-time tasks do not repeat. |
+
+### Scheduling Design Decisions
+
+The scheduling algorithms are implemented in the `Scheduler` class rather
+than directly in the Streamlit interface. This separates the application's
+business logic from its user interface and makes the algorithms easier to
+maintain, reuse, and test.
+
+Chronological sorting prioritizes tasks based on their scheduled date and
+time rather than their priority level. Priority is stored as task information
+but does not currently affect the order of the schedule.
+
+Conflict detection assumes that one owner is responsible for all pet care
+activities. When two pending tasks overlap, the system identifies the conflict
+but leaves the decision about rescheduling to the owner.
+
+Recurring tasks are generated when their previous occurrence is marked
+complete through the Scheduler. This prevents unnecessary duplicate tasks
+and preserves completed activities as part of the task history.
 
 ## 📸 Demo Walkthrough
 
@@ -142,3 +162,4 @@ Describe your app in numbered steps so a reader can follow along without watchin
 5. <!-- Add more steps as needed -->
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+
