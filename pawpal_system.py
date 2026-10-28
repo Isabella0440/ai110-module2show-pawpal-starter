@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from typing import Optional
 @dataclass
 class Task:
@@ -13,11 +13,17 @@ class Task:
 
     def mark_complete(self):
         """Mark this task as completed."""
-        pass
+        self.completed = True
 
     def next_occurrence(self) -> Optional[date]:
-        """Calculate the next occurrence of a recurring task."""
-        pass
+        """Calculate the next date for a recurring task."""
+        if self.frequency.lower() == "daily":
+            return self.due_date + timedelta(days=1)
+
+        elif self.frequency.lower() == "weekly":
+            return self.due_date + timedelta(weeks=1)
+
+        return None
 @dataclass
 class Pet:
     name: str
@@ -26,16 +32,17 @@ class Pet:
     tasks: list[Task] = field(default_factory=list)
 
     def add_task(self, task: Task):
-        """Add a care task to this pet."""
-        pass
+        """Add a task to this pet."""
+        self.tasks.append(task)
 
     def remove_task(self, task: Task):
-        """Remove a care task from this pet."""
-        pass
+        """Remove a task from this pet."""
+        if task in self.tasks:
+            self.tasks.remove(task)
 
     def get_tasks(self) -> list[Task]:
-        """Return this pet's scheduled tasks."""
-        pass
+        """Return all tasks belonging to this pet."""
+        return self.tasks.copy()
 @dataclass
 class Owner:
     name: str
@@ -43,23 +50,29 @@ class Owner:
 
     def add_pet(self, pet: Pet):
         """Add a pet to the owner's collection."""
-        pass
+        self.pets.append(pet)
 
     def remove_pet(self, pet: Pet):
         """Remove a pet from the owner's collection."""
-        pass
+        if pet in self.pets:
+            self.pets.remove(pet)
 
     def get_all_tasks(self) -> list[Task]:
-        """Retrieve tasks from all pets."""
-        pass
+        """Retrieve tasks from all registered pets."""
+        all_tasks = []
+
+        for pet in self.pets:
+            all_tasks.extend(pet.get_tasks())
+
+        return all_tasks
 class Scheduler:
     def __init__(self, owner: Owner):
         """Initialize the scheduler with an owner."""
         self.owner = owner
 
     def get_schedule(self) -> list[Task]:
-        """Retrieve scheduled tasks from the owner."""
-        pass
+        """Retrieve all scheduled tasks from the owner."""
+        return self.owner.get_all_tasks()
 
     def sort_by_time(self, tasks: list[Task]) -> list[Task]:
         """Sort tasks by their scheduled time."""

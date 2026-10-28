@@ -44,14 +44,64 @@ pip install -r requirements.txt
 
 ## 🖥️ Sample Output
 
-Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
+## Sample CLI Output
 
+The following output demonstrates the core functionality of PawPal+
+using the `main.py` script. The demonstration creates an owner,
+registers two pets, assigns four care tasks, and displays the
+daily schedule in chronological order.
+
+To run the demonstration:
+
+```bash
+python3 main.py
 ```
-# e.g.:
-# Daily plan for Biscuit (Golden Retriever):
-#   08:00 — Morning walk (30 min) [priority: high]
-#   09:00 — Feeding (10 min) [priority: high]
-#   ...
+
+### Example Output
+
+```text
+=======================================================
+                 PAWPAL+
+              TODAY'S SCHEDULE
+=======================================================
+Owner: Isabella
+Date: October 28, 2026
+Registered Pets: 2
+-------------------------------------------------------
+Time: 08:00
+Pet: Bella
+Activity: Morning Walk
+Duration: 30 minutes
+Priority: High
+Frequency: Daily
+Status: Pending
+-------------------------------------------------------
+Time: 09:00
+Pet: Luna
+Activity: Breakfast
+Duration: 15 minutes
+Priority: Medium
+Frequency: Daily
+Status: Pending
+-------------------------------------------------------
+Time: 10:00
+Pet: Luna
+Activity: Medication
+Duration: 5 minutes
+Priority: High
+Frequency: Daily
+Status: Pending
+-------------------------------------------------------
+Time: 18:00
+Pet: Bella
+Activity: Evening Walk
+Duration: 30 minutes
+Priority: Medium
+Frequency: Daily
+Status: Pending
+-------------------------------------------------------
+Total Tasks: 4
+=======================================================
 ```
 
 ## 🧪 Testing PawPal+
