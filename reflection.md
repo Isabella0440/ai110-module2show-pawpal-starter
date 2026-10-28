@@ -4,14 +4,38 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+For my initial PawPal+ design, I created a UML class diagram containing four main classes: Owner, Pet, Task, and Scheduler. I wanted to keep the architecture simple and modular so that each class would have a specific responsibility.
+
+The Owner class manages the user’s pets and provides access to their tasks. The Pet class stores information about each pet, including its name, species, age, and scheduled activities. The Task class represents individual care activities, such as feeding, walking, and administering medication. It stores information such as the scheduled time, duration, priority, frequency, and completion status. Finally, the Scheduler class is responsible for organizing tasks, sorting them by time, filtering them, detecting scheduling conflicts, and managing recurring activities.
+
+I designed the relationships so that one Owner can have multiple Pets, each Pet can have multiple Tasks, and the Scheduler can retrieve tasks through the Owner. I also chose to use Python dataclasses for the main data objects to reduce repetitive code and make the system easier to maintain.
+
+Overall, my goal was to create a design that separates pet management from scheduling logic while allowing the different classes to work together.
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+After reviewing my initial class skeletons with AI, I identified a few areas that could be improved during implementation. One concern was that tasks did not have unique identifiers, which could make it difficult to distinguish between activities with similar descriptions and scheduled times. Another concern was that the system did not yet validate scheduling information, meaning users could potentially enter invalid times or recurrence values.
 
+I also reviewed how recurring tasks would be handled. I decided that the Task class should be responsible for calculating the next occurrence, while the Scheduler should manage creating the new task after the original is completed. This separation helps prevent duplicate logic and keeps each class focused on its responsibilities.
+
+I decided to keep my original four-class architecture because the relationships and responsibilities were already appropriate for the project. Rather than adding unnecessary complexity to the initial design, I plan to address these improvements as I implement and test the application.
+
+---
+### Core User Actions
+
+The three core actions I identified for PawPal+ are:
+
+1. **Manage Pets:** Users should be able to add and manage multiple
+   pets, including basic information such as their names and species.
+
+2. **Schedule Care Tasks:** Users should be able to create tasks for
+   their pets, including feeding, walking, medications, and appointments.
+   Each task should include a scheduled time, duration, priority,
+   and frequency.
+
+3. **View and Manage Schedules:** Users should be able to view their
+   pets' daily tasks in chronological order, identify scheduling
+   conflicts, and mark tasks as completed.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
