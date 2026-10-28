@@ -106,19 +106,54 @@ Total Tasks: 4
 
 ## 🧪 Testing PawPal+
 
-```bash
-# Run the full test suite:
-pytest
+PawPal+ uses pytest to verify the functionality of its core classes and scheduling algorithms.
 
-# Run with coverage:
-pytest --cov
+### Running Automated Tests
+
+Run the full test suite:
+
+```bash
+python3 -m pytest
 ```
+
+### Test Coverage
+
+| Test | Purpose | Result |
+|------|---------|--------|
+| Task completion | Verify tasks can be marked complete | Passed |
+| Task addition | Verify tasks can be assigned to pets | Passed |
+| Chronological sorting | Verify tasks are ordered by date and time | Passed |
+| Task filtering | Verify filtering by pet and completion status | Passed |
+| Daily recurrence | Verify daily tasks generate the next occurrence | Passed |
+| Weekly recurrence | Verify weekly tasks generate the next occurrence | Passed |
+| One-time tasks | Verify nonrecurring tasks do not repeat | Passed |
+| Overlapping tasks | Verify scheduling conflicts are detected | Passed |
+| Nonoverlapping tasks | Verify back-to-back activities do not conflict | Passed |
+| Empty schedules | Verify the scheduler handles no tasks | Passed |
+| Duplicate completion | Verify recurring tasks are not duplicated | Passed |
+| Completed task conflicts | Verify completed tasks are excluded from conflicts | Passed |
+
+### Verification Results
+
+All 12 automated tests passed successfully using Python 3.14.7 and pytest 9.2.0.
 
 Sample test output:
 
+```text
+collected 12 items
+
+tests/test_pawpal.py ............ [100%]
+
+12 passed in 0.03s
 ```
-# Paste your pytest output here
-```
+
+### Testing Limitations
+
+The current automated tests focus on backend functionality, including task management, scheduling, recurrence, and conflict detection.
+
+The Streamlit interface has been manually tested, but automated UI tests have not yet been implemented.
+
+Future improvements could include additional input validation tests, persistent data storage tests, and more complex scheduling scenarios.
 
 ## 📐 Smarter Scheduling
 

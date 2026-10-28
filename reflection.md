@@ -74,13 +74,19 @@ By identifying conflicts and leaving the final decision to the user, the schedul
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+I used pytest to test the main functionality of PawPal+, including task creation, task completion, chronological sorting, filtering, recurring tasks, and conflict detection. I wanted to make sure that the scheduler could correctly organize activities by date and time, filter tasks based on the pet or completion status, and generate new occurrences for daily and weekly tasks.
+
+I also tested several edge cases, including empty schedules, duplicate task completion, and conflicts involving completed tasks. These tests were important because they helped me identify potential problems that might not be obvious during normal use. For example, completing the same recurring task twice should not create duplicate activities, and tasks scheduled back-to-back should not be considered conflicting.
+
+All 12 automated tests passed successfully, which confirmed that the backend functionality behaved as expected in the scenarios I tested.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+I would rate my confidence in the scheduler as a 9 out of 10. The automated tests covered the main scheduling features, and all 12 tests passed without errors. I also manually tested the application during development, which helped me verify that the different components worked together.
+
+However, I know that passing tests does not necessarily mean the application is completely free of bugs. If I had more time, I would test additional edge cases, such as tasks with invalid time formats, negative durations, and overlapping activities scheduled across midnight. I would also test how the scheduler handles a much larger number of pets and tasks to see whether performance becomes an issue.
+
+Overall, this exercise strengthened my understanding of automated testing and why verification is important in software development. I learned that testing should cover both expected behavior and unusual situations to make sure an application is reliable.
 
 ---
 
